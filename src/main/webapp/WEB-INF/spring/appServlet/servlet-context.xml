@@ -33,8 +33,11 @@
     <interceptors>
         <interceptor>
             <mapping path="/products/**"/>
+            <beans:bean class="dev.myodan.polycafe.interceptor.MemberInterceptor"/>
+        </interceptor>
+        <interceptor>
             <mapping path="/members/**"/>
-            <beans:bean class="dev.myodan.polycafe.interceptor.AuthInterceptor"/>
+            <beans:bean class="dev.myodan.polycafe.interceptor.AdminInterceptor"/>
         </interceptor>
     </interceptors>
 

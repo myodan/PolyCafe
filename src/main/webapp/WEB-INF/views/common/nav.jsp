@@ -10,18 +10,6 @@
             </li>
         </ul>
         <ul>
-            <c:if test="${sessionScope.member.role eq '4'}">
-                <li>
-                    <a href="${pageContext.request.contextPath}/products" class="contrast">
-                        제품관리
-                    </a>
-                </li>
-                <li>
-                    <a href="${pageContext.request.contextPath}/members" class="contrast">
-                        회원관리
-                    </a>
-                </li>
-            </c:if>
             <c:if test="${sessionScope.member eq null}">
                 <li>
                     <a href="${pageContext.request.contextPath}/auth/sign-in" class="contrast">
@@ -35,6 +23,20 @@
                 </li>
             </c:if>
             <c:if test="${sessionScope.member.role ne null}">
+                <c:if test="${sessionScope.member.role ne '4'}">
+                    <li>
+                        <a href="${pageContext.request.contextPath}/products" class="contrast">
+                            제품관리
+                        </a>
+                    </li>
+                </c:if>
+                <c:if test="${sessionScope.member.role eq '4'}">
+                    <li>
+                        <a href="${pageContext.request.contextPath}/members" class="contrast">
+                            회원관리
+                        </a>
+                    </li>
+                </c:if>
                 <li>
                     <span>
                             ${sessionScope.member.name}
