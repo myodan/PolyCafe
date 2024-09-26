@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productImageMapper">
+
+    <select id="findAllByProductId" resultType="ProductImage">
+        SELECT *
+        FROM PRODUCT_IMAGE
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <insert id="create" parameterType="ProductImage">
+        INSERT INTO PRODUCT_IMAGE (ID, PRODUCT_ID, FILENAME, UUID)
+        VALUES (#{id}, #{productId}, #{filename}, #{uuid})
+
+        <selectKey keyProperty="id" resultType="Long" order="AFTER">
+            SELECT PRODUCT_IMAGE_ID_SEQ.currval FROM DUAL
+        </selectKey>
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM PRODUCT_IMAGE
+        WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteAllByProductId">
+        DELETE
+        FROM PRODUCT_IMAGE
+        WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+</mapper>

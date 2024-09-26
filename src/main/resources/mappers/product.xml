@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="productMapper">
+
+    <select id="count" resultType="Long">
+        SELECT COUNT(*)
+        FROM PRODUCT
+    </select>
+
+    <select id="findAll" resultType="Product">
+        SELECT *
+        FROM PRODUCT
+        ORDER BY ID DESC
+    </select>
+
+    <select id="findAllPageable" resultType="Product">
+        SELECT *
+        FROM (SELECT T.*, ROWNUM AS RNUM
+              FROM (SELECT *
+                    FROM PRODUCT
+                    ORDER BY ID DESC) T)
+        WHERE RNUM BETWEEN (#{page} - 1) * #{offset} + 1 AND #{page} * #{offset}
+    </select>
+
+    <resultMap id="productMap" type="Product" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection
+                property="productImages"
+                column="id"
+                ofType="ProductImage"
+                autoMapping="true"
+        >
+            <id property="id" column="product_image_id"/>
+            <result property="productId" column="product_id" />
+        </collection>
+    </resultMap>
+
+    <select id="findById" resultMap="productMap">
+        SELECT P.*, I.ID product_image_id, I.FILENAME, I.UUID, I.PRODUCT_ID
+        FROM PRODUCT P
+                 LEFT JOIN PRODUCT_IMAGE I ON P.ID = I.PRODUCT_ID
+        WHERE P.ID = #{id}
+    </select>
+
+    <insert id="create">
+        INSERT INTO PRODUCT (ID, NAME, PRICE, GRADE)
+        VALUES (PRODUCT_ID_SEQ.nextval, #{name}, #{price}, #{grade})
+
+        <selectKey keyProperty="id" resultType="Long" order="AFTER">
+            SELECT PRODUCT_ID_SEQ.currval FROM DUAL
+        </selectKey>
+    </insert>
+
+    <update id="update">
+        UPDATE PRODUCT
+        SET NAME  = #{name},
+            PRICE = #{price},
+            GRADE = #{grade}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM PRODUCT
+        WHERE ID = #{id}
+    </delete>
+
+</mapper>
